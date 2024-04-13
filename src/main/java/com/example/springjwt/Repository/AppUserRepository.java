@@ -1,6 +1,8 @@
 package com.example.springjwt.Repository;
 
 import com.example.springjwt.Model.AppUser;
+import com.example.springjwt.Model.Dto.request.AppUserRequest;
+import com.example.springjwt.Model.Dto.response.AppUserResponse;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
@@ -21,4 +23,16 @@ public interface AppUserRepository {
             @Result(property = "fullName", column = "full_name")
     })
     AppUser findByEmail(String email);
+
+    @Select("""
+        INSERT INTO users VALUES (default, #{appUser.fullName}, #{appUser.email}, #{appUser.password})
+        RETURNING *
+    """)
+    @ResultMap("userMap")
+    AppUser register(@Param("appUser") AppUserRequest appUserRequest);
+
+    @Insert("""
+        INSERT INTO user_role VALUES (#{userId}, #{roleId})
+    """)
+    void insertUserIdAndRoleId(Integer userId, Integer roleId);
 }

@@ -1,11 +1,11 @@
 package com.example.springjwt.Controller;
 
 import com.example.springjwt.Jwt.JwtService;
-import com.example.springjwt.Model.Dto.AuthRequest;
-import com.example.springjwt.Model.Dto.AuthResponse;
+import com.example.springjwt.Model.Dto.request.AppUserRequest;
+import com.example.springjwt.Model.Dto.request.AuthRequest;
+import com.example.springjwt.Model.Dto.response.AuthResponse;
 import com.example.springjwt.Service.AppUserService;
 import org.apache.coyote.BadRequestException;
-import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -57,5 +57,12 @@ public class AuthController {
         final String token = jwtService.generateToken(userDetails);
         AuthResponse authResponse = new AuthResponse(token);
         return ResponseEntity.ok(authResponse);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody AppUserRequest appUserRequest) {
+//        System.out.println(appUserService.register(appUserRequest));
+        return ResponseEntity.ok(appUserService.register(appUserRequest));
+//        return ResponseEntity.ok("gg");
     }
 }
