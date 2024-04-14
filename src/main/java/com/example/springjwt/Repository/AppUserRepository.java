@@ -5,6 +5,8 @@ import com.example.springjwt.Model.Dto.request.AppUserRequest;
 import com.example.springjwt.Model.Dto.response.AppUserResponse;
 import org.apache.ibatis.annotations.*;
 
+import java.sql.Timestamp;
+
 @Mapper
 public interface AppUserRepository {
     @Select("""
@@ -35,4 +37,9 @@ public interface AppUserRepository {
         INSERT INTO user_role VALUES (#{userId}, #{roleId})
     """)
     void insertUserIdAndRoleId(Integer userId, Integer roleId);
+
+    @Insert("""
+        INSERT INTO otps VALUES (default, #{otp}, #{issued}, #{expiration}, #{verify}, #{userId})
+    """)
+    void insertUserOtp(String otp, Timestamp issued, Timestamp expiration, Boolean verify, Integer userId);
 }

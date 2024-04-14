@@ -25,26 +25,32 @@ public class EmailingService {
     private String fromMail;
 
     @Async
-    public void sendMail(MailRequest request) throws MessagingException {
+    public void sendMail(String email, String otp) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
 
         mimeMessageHelper.setFrom(fromMail);
-        mimeMessageHelper.setTo(request.getToEmail());
-        mimeMessageHelper.setSubject(request.getSubject());
+        //set email where you want to send to
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Registered please verify with OTP.");
 
-        if(request.isHTML()) {
-            Context context = new Context();
-            /*
-            content is the variable defined in our HTML template within the div tag
-            */
-            context.setVariable("content", request.getMessage());
-            String processedString = templateEngine.process("template", context);
+        Context context = new Context();
+        context.setVariable("content", otp);
+        String processedString = templateEngine.process("template", context);
+        mimeMessageHelper.setText(processedString, true);
 
-            mimeMessageHelper.setText(processedString, true);
-        } else {
-            mimeMessageHelper.setText(request.getMessage(), false);
-        }
+//        if(request.isHTML()) {
+//            Context context = new Context();
+//            /*
+//            content is the variable defined in our HTML template within the div tag
+//            */
+//            context.setVariable("content", "gg");
+//            String processedString = templateEngine.process("template", context);
+//
+//            mimeMessageHelper.setText(processedString, true);
+//        } else {
+//            mimeMessageHelper.setText(request.getMessage(), false);
+//        }
 
         mailSender.send(mimeMessage);
     }

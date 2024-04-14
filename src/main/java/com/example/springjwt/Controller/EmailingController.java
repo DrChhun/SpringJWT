@@ -21,8 +21,8 @@ public class EmailingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void sendMail(@RequestBody MailRequest request) throws MessagingException {
-        emailingService.sendMail(request);
+    public void sendMail() throws MessagingException {
+        emailingService.sendMail("srykimchhun9@gmail.com", "12345");
     }
 }
 
