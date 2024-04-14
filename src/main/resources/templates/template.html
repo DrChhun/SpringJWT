@@ -2,13 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
 <!--
 HTML code would be added to the below div tag
 which would be taken as an input from the user.
 -->
-<div th:utext="${content}"></div>
-<h1>Hello world this is from template package</h1>
+<center>
+    <div class="flex justify-center text-center flex-col space-y-8 py-16">
+        <h1 class="text-2xl font-bold">Expense Tracking Application</h1>
+        <p class="w-1/2 mx-auto">Before you sign in, we need to verify your identity. Enter the following code on the sign-in page.</p>
+        <p style="background-color: gray; padding: 1rem 2.5rem; font-size: 1.2rem; color: white; font-weight: bold; width: fit-content" class="px-16 py-4 bg-gray-200 w-fit mx-auto text-xl font-semibold" th:utext="${content}">888 - 888</p>
+        <p class="text-xs w-1/2 mx-auto">Welcome to the Expense Tracking Application. Here, you can monitor your expenses and manage your budget effectively.</p>
+    </div>
+</center>
 </body>
 </html>

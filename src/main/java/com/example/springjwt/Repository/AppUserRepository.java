@@ -3,6 +3,7 @@ package com.example.springjwt.Repository;
 import com.example.springjwt.Model.AppUser;
 import com.example.springjwt.Model.Dto.request.AppUserRequest;
 import com.example.springjwt.Model.Dto.response.AppUserResponse;
+import com.example.springjwt.Model.Otp;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;
@@ -14,6 +15,11 @@ public interface AppUserRepository {
            ON r.id = ur.role_id WHERE user_id = #{userId}
            """)
     String getRoleByUserId(Integer userId);
+
+    @Select("""
+        select u.fullname from users u inner join otps o on u.id = o.user_id where id = #{id};
+    """)
+    String getUserByUserId(Integer id);
     @Select("""
            SELECT * FROM users WHERE email = #{email}
            """)
@@ -25,6 +31,17 @@ public interface AppUserRepository {
             @Result(property = "fullName", column = "full_name")
     })
     AppUser findByEmail(String email);
+
+    @Select("""
+        SELECT * FROM otps WHERE user_id = #{id};
+    """)
+    @Results(id = "otpMap", value = {
+            @Result(property = "otpId", column = "otp_id"),
+            @Result(property = "otpCode", column = "otp_code"),
+//            @Result(property = "issuedAt", column = "issued_at"),
+//            @Result(property = "userId", column = "user_id", one = @One(select = "getUserByUserId"))
+    })
+    Otp findOtpByUserId(Integer id);
 
     @Select("""
         INSERT INTO users VALUES (default, #{appUser.fullName}, #{appUser.email}, #{appUser.password})
@@ -42,4 +59,11 @@ public interface AppUserRepository {
         INSERT INTO otps VALUES (default, #{otp}, #{issued}, #{expiration}, #{verify}, #{userId})
     """)
     void insertUserOtp(String otp, Timestamp issued, Timestamp expiration, Boolean verify, Integer userId);
+
+    @Select("""
+        UPDATE otps
+        SET verify = #{b}
+        WHERE user_id = #{id}
+    """)
+    void verifyUserOtp(Integer id, boolean b);
 }

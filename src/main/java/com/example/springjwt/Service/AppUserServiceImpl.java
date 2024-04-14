@@ -3,6 +3,7 @@ package com.example.springjwt.Service;
 import com.example.springjwt.Model.AppUser;
 import com.example.springjwt.Model.Dto.request.AppUserRequest;
 import com.example.springjwt.Model.Dto.response.AppUserResponse;
+import com.example.springjwt.Model.Otp;
 import com.example.springjwt.Repository.AppUserRepository;
 import com.example.springjwt.Util.OtpUtil;
 import jakarta.mail.MessagingException;
@@ -13,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Service
 public class AppUserServiceImpl implements AppUserService{
@@ -61,5 +64,16 @@ public class AppUserServiceImpl implements AppUserService{
         }
 
         return modelMapper.map(appUserRepository.findByEmail(appUser.getEmail()), AppUserResponse.class);
+    }
+
+    @Override
+    public String verify(String otp) {
+        Otp user = appUserRepository.findOtpByUserId(27);
+        if (user.getOtpCode().equals(otp) && Duration.between(user.getIssuedAt().getTimestamp().toInstant(), LocalDateTime.now()).getSeconds() < (1  * 60)) {
+//            user.setVerify(true);
+            System.out.println("right here");
+            appUserRepository.verifyUserOtp(27, true);
+        }
+        return "gg";
     }
 }

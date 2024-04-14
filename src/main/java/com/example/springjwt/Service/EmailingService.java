@@ -36,6 +36,7 @@ public class EmailingService {
 
         Context context = new Context();
         context.setVariable("content", otp);
+//        context.
         String processedString = templateEngine.process("template", context);
         mimeMessageHelper.setText(processedString, true);
 
