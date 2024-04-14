@@ -61,8 +61,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AppUserRequest appUserRequest) {
-//        System.out.println(appUserService.register(appUserRequest));
         return ResponseEntity.ok(appUserService.register(appUserRequest));
-//        return ResponseEntity.ok("gg");
     }
 }
