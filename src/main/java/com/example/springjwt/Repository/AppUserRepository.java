@@ -1,5 +1,7 @@
 package com.example.springjwt.Repository;
 
+import ch.qos.logback.core.model.TimestampModel;
+import ch.qos.logback.core.model.processor.TimestampModelHandler;
 import com.example.springjwt.Model.AppUser;
 import com.example.springjwt.Model.Dto.request.AppUserRequest;
 import com.example.springjwt.Model.Dto.response.AppUserResponse;
@@ -38,7 +40,7 @@ public interface AppUserRepository {
     @Results(id = "otpMap", value = {
             @Result(property = "otpId", column = "otp_id"),
             @Result(property = "otpCode", column = "otp_code"),
-//            @Result(property = "issuedAt", column = "issued_at"),
+            @Result(property = "issuedAt", column = "issued_at"),
 //            @Result(property = "userId", column = "user_id", one = @One(select = "getUserByUserId"))
     })
     Otp findOtpByUserId(Integer id);

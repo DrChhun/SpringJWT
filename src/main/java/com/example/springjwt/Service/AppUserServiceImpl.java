@@ -24,6 +24,7 @@ public class AppUserServiceImpl implements AppUserService{
     private final ModelMapper modelMapper;
     private final OtpUtil otpUtil;
     private final EmailingService emailingService;
+    private Integer handleUserId;
     public AppUserServiceImpl(AppUserRepository appUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder, ModelMapper modelMapper, OtpUtil otpUtil, EmailingService emailingService) {
         this.appUserRepository = appUserRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -45,6 +46,7 @@ public class AppUserServiceImpl implements AppUserService{
                 appUserRequest.getPassword()
         ));
         AppUser appUser = appUserRepository.register(appUserRequest);
+        handleUserId = appUser.getId();
         for (String role: appUserRequest.getRoles()) {
             if (role.equals("ROLE_USER")) {
                 appUserRepository.insertUserIdAndRoleId(appUser.getId(), 1);
@@ -58,7 +60,7 @@ public class AppUserServiceImpl implements AppUserService{
         //calling emailing service for send otp code to email, also send email and otp as argument.
         try {
             emailingService.sendMail(appUser.getEmail(), otp);
-            appUserRepository.insertUserOtp(otp, Timestamp.valueOf("2024-04-14 21:58:58.000000"), Timestamp.valueOf("2024-04-14 21:58:58.000000"), true, appUser.getId());
+            appUserRepository.insertUserOtp(otp, Timestamp.valueOf(LocalDateTime.now()), Timestamp.valueOf("2024-04-14 21:58:58.000000"), false, appUser.getId());
         } catch (MessagingException e) {
             throw new RuntimeException("Unable to send OTP code.");
         }
@@ -68,12 +70,11 @@ public class AppUserServiceImpl implements AppUserService{
 
     @Override
     public String verify(String otp) {
-        Otp user = appUserRepository.findOtpByUserId(27);
-        if (user.getOtpCode().equals(otp) && Duration.between(user.getIssuedAt().getTimestamp().toInstant(), LocalDateTime.now()).getSeconds() < (1  * 60)) {
-//            user.setVerify(true);
-            System.out.println("right here");
-            appUserRepository.verifyUserOtp(27, true);
+        Otp user = appUserRepository.findOtpByUserId(handleUserId);
+        if (user.getOtpCode().equals(otp) && Duration.between(user.getIssuedAt(), LocalDateTime.now()).getSeconds() < (1  * 60)) {
+            appUserRepository.verifyUserOtp(handleUserId, true);
+            return "Successfully verify.";
         }
-        return "gg";
+        return "Something error please verify again.";
     }
 }

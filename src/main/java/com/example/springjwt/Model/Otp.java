@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.security.Timestamp;
 public class Otp {
     int otpId;
     String otpCode;
-    Timestamp issuedAt;
+    LocalDateTime issuedAt;
     Timestamp expiration;
     boolean verify;
     AppUser userId;
