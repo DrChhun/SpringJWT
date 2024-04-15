@@ -6,6 +6,7 @@ import com.example.springjwt.Model.Dto.request.AuthRequest;
 import com.example.springjwt.Model.Dto.response.AuthResponse;
 import com.example.springjwt.Service.AppUserService;
 import org.apache.coyote.BadRequestException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,10 +14,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -62,5 +60,15 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody AppUserRequest appUserRequest) {
         return ResponseEntity.ok(appUserService.register(appUserRequest));
+    }
+
+    @PutMapping("/verify")
+    public ResponseEntity<String> verifyAccount(@RequestParam String otp) {
+        return new ResponseEntity<>(appUserService.verify(otp), HttpStatus.OK);
+    }
+
+    @PostMapping("/resend")
+    public ResponseEntity<String> resendOtp(@RequestParam String email) {
+        return new ResponseEntity<>(appUserService.resend(email), HttpStatus.OK);
     }
 }

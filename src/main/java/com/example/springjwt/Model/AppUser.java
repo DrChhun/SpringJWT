@@ -22,6 +22,7 @@ public class AppUser implements UserDetails {
     private String email;
     private String password;
     private List<String> roles;
+    private Otp otp;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
