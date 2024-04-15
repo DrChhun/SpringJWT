@@ -68,4 +68,11 @@ public interface AppUserRepository {
         WHERE user_id = #{id}
     """)
     void verifyUserOtp(Integer id, boolean b);
+
+    @Select("""
+        UPDATE otps
+        SET otp_code = #{otp}
+        WHERE user_id = #{id};
+    """)
+    void resendVerify(Integer id, String otp);
 }

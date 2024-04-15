@@ -77,4 +77,17 @@ public class AppUserServiceImpl implements AppUserService{
         }
         return "Something error please verify again.";
     }
+
+    @Override
+    public String resend(String email) {
+        String otp = otpUtil.generateOtp();
+        AppUser user = appUserRepository.findByEmail(email);
+        try {
+            emailingService.sendMail(email, otp);
+            appUserRepository.resendVerify(user.getId(), otp);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Unable to send OTP code.");
+        }
+        return null;
+    }
 }

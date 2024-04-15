@@ -66,4 +66,9 @@ public class AuthController {
     public ResponseEntity<String> verifyAccount(@RequestParam String otp) {
         return new ResponseEntity<>(appUserService.verify(otp), HttpStatus.OK);
     }
+
+    @PostMapping("/resend")
+    public ResponseEntity<String> resendOtp(@RequestParam String email) {
+        return new ResponseEntity<>(appUserService.resend(email), HttpStatus.OK);
+    }
 }
